@@ -125,7 +125,7 @@ namespace WebApp.Controllers
         }
 
         // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -133,10 +133,17 @@ namespace WebApp.Controllers
             }
 
             var product = await _context.Products
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (product == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] = "Delete failed";
             }
 
             return View(product);
@@ -148,9 +155,22 @@ namespace WebApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if(product == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            try
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch(DbUpdateException)
+            {
+                return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
+            }
+           
         }
 
         private bool ProductExists(int id)
