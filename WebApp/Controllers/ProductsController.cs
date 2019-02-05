@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using WebApp.Data;
 using WebApp.Models;
 
@@ -13,10 +14,12 @@ namespace WebApp.Controllers
     public class ProductsController : Controller
     {
         private readonly ProductContext _context;
+        private readonly IStringLocalizer<ProductsController> _localizer;
 
-        public ProductsController(ProductContext context)
+        public ProductsController(ProductContext context, IStringLocalizer<ProductsController> localizer)
         {
             _context = context;
+            _localizer = localizer;
         }
 
         // GET: Products
@@ -67,7 +70,7 @@ namespace WebApp.Controllers
             }
             catch(DbUpdateException)
             {
-                ModelState.AddModelError("", "Unable to save changes");
+                ModelState.AddModelError("", _localizer["Unable to save changes"]);
             }
             
             return View(product);
@@ -143,7 +146,7 @@ namespace WebApp.Controllers
 
             if (saveChangesError.GetValueOrDefault())
             {
-                ViewData["ErrorMessage"] = "Delete failed";
+                ViewData["ErrorMessage"] = _localizer["Delete failed"];
             }
 
             return View(product);

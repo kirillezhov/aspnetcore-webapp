@@ -1,7 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Home Page"];
 }
-<h2>My Tables</h2>
+<h2>@Localizer["My Tables"]</h2>
 <ul>
-    <li><a asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
+    <li><a asp-area="" asp-controller="Products" asp-action="Index">@Localizer["Products"]</a></li>
 </ul>

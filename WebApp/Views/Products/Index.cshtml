@@ -1,14 +1,13 @@
-﻿@model IEnumerable<WebApp.Models.Product>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<WebApp.Models.Product>
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = Localizer["Products"];
 }
 
-<h2>Products Table</h2>
-
-<p>
-    <a asp-action="Create">Create New Product</a>
-</p>
+<h2>@ViewData["Title"]</h2>
 <table class="table">
     <thead>
         <tr>
@@ -31,29 +30,33 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                $@Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rack)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cell)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rack)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cell)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">@Localizer["Edit"]</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">@Localizer["Details"]</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">@Localizer["Delete"]</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<p>
+    <a asp-action="Create">@Localizer["Create New Product"]</a>
+</p>

@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace WebApp
 {
@@ -35,7 +37,13 @@ namespace WebApp
 
             services.AddDbContext<ProductContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
+
+            services.AddMvc()
+                .AddViewLocalization()
+                .AddDataAnnotationsLocalization()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +62,21 @@ namespace WebApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            var supportedCultures = new[]
+            {
+                new CultureInfo("ru"),
+                new CultureInfo("en"),
+            };
+
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            };
+
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseMvc(routes =>
             {

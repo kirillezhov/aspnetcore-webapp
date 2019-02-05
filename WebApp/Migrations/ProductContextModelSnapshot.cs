@@ -26,13 +26,17 @@ namespace WebApp.Migrations
 
                     b.Property<byte>("Cell");
 
-                    b.Property<string>("Model");
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
                     b.Property<decimal>("Price");
 
                     b.Property<byte>("Rack");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
                     b.HasKey("ID");
 
