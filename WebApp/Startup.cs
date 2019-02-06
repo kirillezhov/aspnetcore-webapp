@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApp
 {
@@ -38,6 +39,9 @@ namespace WebApp
             services.AddDbContext<ProductContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ProductContext>();
+
             services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
 
             services.AddMvc()
@@ -61,6 +65,7 @@ namespace WebApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseCookiePolicy();
 
             var supportedCultures = new[]
