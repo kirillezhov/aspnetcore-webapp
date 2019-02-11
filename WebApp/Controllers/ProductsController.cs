@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Roles = "User, Admin")]
     public class ProductsController : Controller
     {
         private readonly ProductContext _context;
@@ -75,7 +77,7 @@ namespace WebApp.Controllers
             
             return View(product);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -126,7 +128,7 @@ namespace WebApp.Controllers
             }
             return View(product);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
